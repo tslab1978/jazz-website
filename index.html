@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Takuya Shintani — Jazz Pianist</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0c0c0c;--bg2:#111;--bg3:#161616;
+  --line:rgba(255,255,255,0.07);--line2:rgba(255,255,255,0.15);
+  --text:#e2e2e2;--muted:#999;--muted2:#bbb;--accent:#d8d8d8;--white:#f0f0f0;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Helvetica Neue','Helvetica','ヒラギノ角ゴ ProN','Hiragino Kaku Gothic ProN','ヒラギノ角ゴ Pro','Hiragino Kaku Gothic Pro',sans-serif;font-weight:300;line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+.ja{display:block;}.en{display:none;}.ja-i{display:inline;}.en-i{display:none;}
+body.en .ja{display:none !important;}body.en .en{display:block !important;}body.en .ja-i{display:none !important;}body.en .en-i{display:inline !important;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:0 3.5rem;height:60px;background:rgba(12,12,12,0.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:0.5px solid var(--line2);}
+.nav-logo{font-family:'Helvetica Neue','Helvetica',sans-serif;font-weight:200;font-size:0.8rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--white);}
+.nav-links{display:flex;gap:3rem;list-style:none;align-items:center;}
+.nav-links li{position:relative;}
+.nav-links a{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.65rem;font-weight:400;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted2);text-decoration:none;padding-bottom:3px;transition:color 0.3s;cursor:pointer;display:block;}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:0.5px;background:var(--white);transition:width 0.4s cubic-bezier(0.4,0,0.2,1);}
+.nav-links a:hover{color:var(--white);}.nav-links a:hover::after{width:100%;}
+.lang-btn{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.6rem;font-weight:400;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted2);cursor:pointer;padding:0.3rem 0.8rem;border:0.5px solid rgba(255,255,255,0.2);background:transparent;transition:all 0.3s;}
+.lang-btn:hover{color:var(--white);border-color:rgba(255,255,255,0.5);}
+#topBtn{position:fixed;bottom:2.5rem;right:2.5rem;z-index:300;width:44px;height:44px;background:rgba(30,30,30,0.95);border:0.5px solid rgba(255,255,255,0.2);color:var(--muted2);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;opacity:0;pointer-events:none;transition:opacity 0.4s,color 0.3s,border-color 0.3s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
+#topBtn.visible{opacity:1;pointer-events:auto;}#topBtn:hover{color:var(--white);border-color:rgba(255,255,255,0.5);}#topBtn svg{width:11px;height:11px;}
+#topBtn span{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.45rem;letter-spacing:0.18em;}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:60px 3.5rem 6rem;position:relative;overflow:hidden;}
+.hero-bg-char{position:absolute;bottom:-5%;right:2%;font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:clamp(14rem,24vw,22rem);font-weight:700;line-height:1;color:rgba(255,255,255,0.025);letter-spacing:-0.05em;pointer-events:none;user-select:none;font-style:italic;}
+.hero-tag{font-family:'Helvetica Neue','Helvetica','ヒラギノ角ゴ ProN','Hiragino Kaku Gothic ProN',sans-serif;font-size:0.78rem;font-weight:300;letter-spacing:0.25em;color:var(--muted2);margin-bottom:1.6rem;animation:fadeUp 1.2s ease both;}
+.hero-name{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:clamp(4.5rem,10vw,9rem);font-weight:200;line-height:0.9;letter-spacing:-0.04em;color:var(--white);animation:fadeUp 1.2s 0.12s ease both;}
+.hero-name .thin{font-weight:100;color:rgba(240,240,240,0.4);}
+.hero-rule{width:2rem;height:0.5px;background:rgba(255,255,255,0.25);margin:2rem 0;animation:expandW 1.2s 0.3s ease both;}
+.hero-sub{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.78rem;font-weight:300;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted2);animation:fadeUp 1.2s 0.4s ease both;}
+.hero-scroll{position:absolute;bottom:2.5rem;right:3.5rem;display:flex;flex-direction:column;align-items:center;gap:8px;animation:fadeUp 2s 1s ease both;}
+.scroll-bar{width:0.5px;height:36px;background:var(--muted);transform-origin:top;animation:scrollAnim 2s 1.5s ease-in-out infinite;}
+.scroll-txt{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);writing-mode:vertical-rl;}
+section{padding:7rem 3.5rem;border-top:0.5px solid var(--line);}
+.sec-head{display:flex;align-items:center;gap:1.2rem;margin-bottom:3.5rem;}
+.sec-num{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.6rem;font-weight:400;letter-spacing:0.25em;color:var(--muted);}
+.sec-rule{width:1.8rem;height:0.5px;background:var(--line2);}
+.sec-lbl{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.6rem;font-weight:400;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);}
+.sec-title{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:clamp(2rem,4.5vw,3.8rem);font-weight:200;line-height:1;letter-spacing:-0.03em;color:var(--white);}
+.sec-title em{font-style:italic;font-weight:100;color:rgba(240,240,240,0.4);}
+.show-list{margin-top:2.5rem;}
+.show-item{display:grid;grid-template-columns:4rem 1px 1fr auto;gap:0 2.2rem;align-items:center;padding:1.5rem 0;border-bottom:0.5px solid var(--line);transition:background 0.2s;cursor:default;}
+.show-item:hover{background:rgba(255,255,255,0.02);}
+.show-date{text-align:center;}
+.show-day{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:1.7rem;font-weight:200;color:var(--accent);line-height:1;}
+.show-mon{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted2);margin-top:2px;}
+.v-rule{width:0.5px;height:2.2rem;background:var(--line2);justify-self:center;}
+.show-t{font-family:'Helvetica Neue','Helvetica','ヒラギノ角ゴ ProN','Hiragino Kaku Gothic ProN',sans-serif;font-size:0.95rem;font-weight:300;color:var(--white);margin-bottom:3px;}
+.show-t-row{display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;}
+.show-v{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.78rem;letter-spacing:0.08em;color:var(--muted2);}
+.show-r{text-align:right;}
+.show-time{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.65rem;letter-spacing:0.1em;color:var(--muted2);}
+.show-tag-pill{display:inline-block;margin-top:4px;font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.52rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted2);border:0.5px solid rgba(255,255,255,0.15);padding:2px 6px;}
+.past-pill{color:var(--muted);border-color:rgba(255,255,255,0.08);}
+.prof-grid{display:grid;grid-template-columns:1fr 1.8fr;gap:6rem;align-items:start;margin-top:2.5rem;}
+.prof-img{aspect-ratio:3/4;background:var(--bg3);border:0.5px solid var(--line2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.8rem;color:var(--muted);overflow:hidden;}
+.prof-img span{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;}
+.prof-body p{font-family:'Helvetica Neue','Helvetica','ヒラギノ角ゴ ProN','Hiragino Kaku Gothic ProN',sans-serif;font-size:0.9rem;font-weight:300;line-height:2;color:var(--text);margin-bottom:1.5rem;}
+.prof-body p b{color:var(--accent);font-weight:400;display:block;margin-bottom:0.3rem;}
+.prof-nums{display:flex;gap:3rem;margin-top:3rem;padding-top:2rem;border-top:0.5px solid var(--line);}
+.pn-val{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:2rem;font-weight:200;color:var(--white);line-height:1;}
+.pn-lbl{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.55rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);margin-top:5px;}
+.disco-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1.5rem;margin-top:2.5rem;}
+.alb{cursor:pointer;transition:opacity 0.3s;}.alb:hover{opacity:0.65;}
+.alb-cover{aspect-ratio:1;background:var(--bg3);border:0.5px solid var(--line2);display:flex;align-items:center;justify-content:center;font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:2.5rem;font-weight:200;font-style:italic;color:rgba(255,255,255,0.08);margin-bottom:0.85rem;overflow:hidden;}
+.alb-name{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.82rem;font-weight:300;color:var(--accent);margin-bottom:3px;}
+.alb-yr{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.62rem;letter-spacing:0.15em;color:var(--muted);}
+.tc-row{margin-top:3rem;padding-top:2rem;border-top:0.5px solid var(--line);}
+.tc-link{display:inline-flex;align-items:center;gap:0.8rem;font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.65rem;font-weight:400;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted2);text-decoration:none;transition:color 0.3s;}
+.tc-link:hover{color:var(--white);}.tc-arrow{display:inline-block;transition:transform 0.3s;}.tc-link:hover .tc-arrow{transform:translateX(5px);}
+.sns-links{display:flex;gap:1.5rem;align-items:center;}
+.sns-link{color:var(--muted);text-decoration:none;transition:color 0.3s;display:flex;align-items:center;}
+.sns-link:hover{color:var(--white);}.sns-link svg{width:16px;height:16px;fill:currentColor;}
+footer{padding:2.5rem 3.5rem;border-top:0.5px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+.foot-l{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.68rem;font-weight:300;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);}
+.foot-r{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.55rem;letter-spacing:0.15em;color:var(--muted);}
+#modal{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;cursor:pointer;}
+#modal.open{display:flex;}
+#modal-inner{position:relative;display:flex;flex-direction:column;align-items:center;width:min(420px,90vw);max-height:90vh;overflow-y:auto;cursor:default;padding:0 0.5rem;}
+#modal-inner img{width:100%;max-height:60vh;object-fit:contain;display:block;}
+#modal-caption{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.95rem;font-weight:300;letter-spacing:0.1em;color:var(--white);text-align:center;margin-top:0.8rem;width:100%;}
+#modal-detail{font-family:'Helvetica Neue','Helvetica','ヒラギノ角ゴ ProN','Hiragino Kaku Gothic ProN',sans-serif;font-size:0.82rem;font-weight:300;color:var(--text);line-height:1.9;margin-top:0.8rem;width:100%;text-align:left;white-space:pre-wrap;word-break:break-word;}
+#modal-close{position:absolute;top:-2rem;right:0;font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.6rem;letter-spacing:0.2em;color:var(--muted);cursor:pointer;background:transparent;border:none;transition:color 0.2s;}
+#modal-close:hover{color:var(--white);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes expandW{from{width:0;opacity:0;}to{width:2rem;opacity:1;}}
+@keyframes scrollAnim{0%,100%{transform:scaleY(0.2);opacity:0.3;}50%{transform:scaleY(1);opacity:1;}}
+</style>
+</head>
+<body>
+<button id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2 7L5 4L8 7"/></svg>
+  <span>TOP</span>
+</button>
+<nav>
+  <div class="nav-logo">Takuya Shintani</div>
+  <ul class="nav-links">
+    <li><a href="#schedule">Live</a></li>
+    <li><a href="#profile">Profile</a></li>
+    <li><a href="#discography">Discography</a></li>
+  </ul>
+  <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
+</nav>
+<section class="hero" id="top">
+  <div class="hero-bg-char">P</div>
+  <div style="position:relative;z-index:2;">
+    <div class="hero-tag">
+      <span class="ja-i">ジャズピアニスト &nbsp;/&nbsp; キーボーディスト &nbsp;/&nbsp; コンポーザー &nbsp;—&nbsp; Japan</span>
+      <span class="en-i">Jazz Pianist &nbsp;/&nbsp; Keyboardist &nbsp;/&nbsp; Composer &nbsp;—&nbsp; Japan</span>
+    </div>
+    <h1 class="hero-name">Takuya<br><span class="thin">Shintani</span></h1>
+    <div class="hero-rule"></div>
+    <p class="hero-sub">Contemporary Jazz &nbsp;·&nbsp; Improvisation &nbsp;·&nbsp; Composition</p>
+  </div>
+  <div class="hero-scroll"><div class="scroll-bar"></div><div class="scroll-txt">scroll</div></div>
+</section>
+<section id="schedule">
+  <div class="sec-head"><span class="sec-num">01</span><div class="sec-rule"></div><span class="sec-lbl">Live Schedule</span></div>
+  <h2 class="sec-title">Upcoming <em>Shows</em></h2>
+  <div class="show-list" id="showList"></div>
+</section>
+<section id="profile">
+  <div class="sec-head"><span class="sec-num">02</span><div class="sec-rule"></div><span class="sec-lbl">Profile</span></div>
+  <h2 class="sec-title"><em>About</em></h2>
+  <div class="prof-grid">
+    <div class="prof-img">
+      <img src="profile.jpg" alt="Takuya Shintani" style="width:100%;height:100%;object-fit:cover;display:block;"/>
+    </div>
+    <div class="prof-body">
+      <div class="ja">
+        <p><b>プロフィール</b>１９７５年、三重県津市生まれ。４歳でヤマハ音楽教室でエレクトーンを習い始める。高田中学・高等学校を卒業後、１９９３年、岐阜大学医学部に入学。ジャズ研、『リーベ・パルツェ』に入部し、ピアノに転向。独学でジャズ理論を学びつつ、猿渡泰之氏（ドラムス）、北川弘幸氏（ベース）に師事し、東海地区で演奏活動を開始。ビル・エバンス、キース・ジャレット、ハービー・ハンコックなどに影響を受け、独自のスタイルを構築。同時にDTMでの作曲活動を開始。卒業後も社会人音楽家として医業の傍ら積極的に演奏活動に加え、自宅スタジオにおけるセルフプロデュースアルバム計5枚のリリースなど、作曲活動も行なっている。</p>
+        <p><b>活動拠点</b>東海地区中心に積極的に各地で演奏活動。名古屋市　Jazz inn LOVELY、津島市　Jazzくれよん、岐阜市　BAGUなど</p>
+        <p><b>影響を受けたアーティスト</b>ビル・エバンス、キース・ジャレット、ハービー・ハンコック、ビル・シャーラップ、ロバート・グラスパー、ホルガー・マエヤマーなど</p>
+        <p><b>受賞歴</b>１９９９年　吉祥寺ジャズコンテスト　グランプリ、ベストプレーヤー賞</p>
+      </div>
+      <div class="en">
+        <p><b>Profile</b>Born in 1975 in Tsu City, Mie Prefecture. Began playing the Electone at a Yamaha Music School at age four. After graduating from Takada Junior and Senior High School, entered Gifu University School of Medicine in 1993. Joined the jazz club "Liebe Parze" and transitioned to piano. While teaching himself jazz theory, studied under Yasuyuki Sawatari (Drums) and Hiroyuki Kitagawa (Bass), and began performing in the Tokai region. Influenced by Bill Evans, Keith Jarrett, and Herbie Hancock, developed a unique musical style. Has released five albums to date.</p>
+        <p><b>Performance</b>Active primarily in the Tokai region. Regular venues include Jazz inn LOVELY (Nagoya), Jazz Kureyon (Tsushima), and BAGU (Gifu).</p>
+        <p><b>Influences</b>Bill Evans, Keith Jarrett, Herbie Hancock, Bill Charlap, Robert Glasper, Holger Maeyama</p>
+        <p><b>Awards</b>1999: Grand Prix and Best Player Award at the Kichijoji Jazz Contest</p>
+      </div>
+      <div class="prof-nums">
+        <div><div class="pn-val">5</div><div class="pn-lbl">Albums</div></div>
+        <div><div class="pn-val">1993</div><div class="pn-lbl">Since</div></div>
+        <div><div class="pn-val">—</div><div class="pn-lbl">Shows</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="discography">
+  <div class="sec-head"><span class="sec-num">03</span><div class="sec-rule"></div><span class="sec-lbl">Discography</span></div>
+  <h2 class="sec-title"><em>Works</em></h2>
+  <div class="disco-grid">
+    <div class="alb"><div class="alb-cover"><img src="Sprout.jpg" alt="Sprout" style="width:100%;height:100%;object-fit:cover;display:block;"/></div><div class="alb-name">Sprout</div><div class="alb-yr">2018</div></div>
+    <div class="alb"><div class="alb-cover"><img src="Kamino-Kumano.jpg" alt="Kamino Kumano" style="width:100%;height:100%;object-fit:cover;display:block;"/></div><div class="alb-name">Kamino Kumano</div><div class="alb-yr">2019</div></div>
+    <div class="alb"><div class="alb-cover"><img src="Little-Acorn.jpg" alt="Little Acorn" style="width:100%;height:100%;object-fit:cover;display:block;"/></div><div class="alb-name">Little Acorn</div><div class="alb-yr">2022</div></div>
+    <div class="alb"><div class="alb-cover"><img src="Uranus-Cyan.jpg" alt="Uranus Cyan" style="width:100%;height:100%;object-fit:cover;display:block;"/></div><div class="alb-name">Uranus Cyan</div><div class="alb-yr">2023</div></div>
+    <div class="alb"><div class="alb-cover"><img src="Encounter-&-Farewell.jpg" alt="Encounter &amp; Farewell" style="width:100%;height:100%;object-fit:cover;display:block;"/></div><div class="alb-name">Encounter &amp; Farewell</div><div class="alb-yr">2025</div></div>
+  </div>
+  <div class="tc-row">
+    <a class="tc-link" href="https://www.tunecore.co.jp/artists/tslab1978" target="_blank">
+      <span class="ja-i">TuneCore Japan アーティストページ</span>
+      <span class="en-i">View all works on TuneCore Japan</span>
+      <span class="tc-arrow">→</span>
+    </a>
+  </div>
+</section>
+<footer>
+  <div class="foot-l">Takuya Shintani</div>
+  <div class="sns-links">
+    <a class="sns-link" href="https://www.facebook.com/tslab1978" target="_blank" title="Facebook">
+      <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    </a>
+    <a class="sns-link" href="https://www.instagram.com/tslabkeys/" target="_blank" title="Instagram">
+      <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+    </a>
+    <a class="sns-link" href="https://www.youtube.com/@tslab1978" target="_blank" title="YouTube">
+      <svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+    </a>
+  </div>
+  <div class="foot-r">© 2025 Takuya Shintani — All rights reserved</div>
+</footer>
+<div id="modal" onclick="closeModal()">
+  <div id="modal-inner" onclick="event.stopPropagation()">
+    <button id="modal-close" onclick="closeModal()">CLOSE ×</button>
+    <img id="modal-img" src="" alt=""/>
+    <div id="modal-caption"></div>
+    <div id="modal-detail" style="display:none;"></div>
+  </div>
+</div>
+<script>
+var isEn=false;
+function toggleLang(){
+  isEn=!isEn;
+  var allJa=document.querySelectorAll('.ja'),allJaI=document.querySelectorAll('.ja-i'),allEn=document.querySelectorAll('.en'),allEnI=document.querySelectorAll('.en-i');
+  if(isEn){for(var i=0;i<allJa.length;i++)allJa[i].style.display='none';for(var i=0;i<allJaI.length;i++)allJaI[i].style.display='none';for(var i=0;i<allEn.length;i++)allEn[i].style.display='block';for(var i=0;i<allEnI.length;i++)allEnI[i].style.display='inline';document.getElementById('langBtn').textContent='JP';}
+  else{for(var i=0;i<allJa.length;i++)allJa[i].style.display='block';for(var i=0;i<allJaI.length;i++)allJaI[i].style.display='inline';for(var i=0;i<allEn.length;i++)allEn[i].style.display='none';for(var i=0;i<allEnI.length;i++)allEnI[i].style.display='none';document.getElementById('langBtn').textContent='EN';}
+}
+window.addEventListener('scroll',function(){var btn=document.getElementById('topBtn');if(window.scrollY>300)btn.classList.add('visible');else btn.classList.remove('visible');});
+var SHEET_ID='1MMzsBjtkN3wj4a-UzWeMBdWdbMjuDW1bbBS0cCAexHA';
+var SHEET_NAME='ライブ・公演管理';
+var shows=[];
+function loadSheetData(){
+  var baseUrl='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:csv&sheet=';
+  Promise.all([
+    fetch(baseUrl+encodeURIComponent(SHEET_NAME)).then(function(r){return r.text();}),
+    fetch(baseUrl+encodeURIComponent('FlierURLs')).then(function(r){return r.text();})
+  ]).then(function(results){
+    var flierMap={};
+    var fl=results[1].trim().split('\n');
+    for(var j=1;j<fl.length;j++){var fc=fl[j].split(',').map(function(c){return c.replace(/^"|"$/g,'').trim();});if(fc[0]&&fc[1]){var fd=new Date(fc[0]);flierMap[fd.toDateString()]=fc[1];}}
+    shows=[];
+    var lines=results[0].trim().split('\n');
+    for(var i=1;i<lines.length;i++){
+      var cols=parseCsvLine(lines[i]);var dateStr=cols[0]||"";if(!dateStr)continue;
+      var d=new Date(dateStr);if(isNaN(d.getTime()))continue;
+      var month=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'][d.getMonth()];
+      var day=('0'+d.getDate()).slice(-2);
+      shows.push({date:dateStr,day:day,month:month,venue:cols[1]||'',title:cols[2]||'',time:'',tag:'',image:flierMap[d.toDateString()]||'',detail:cols[13]||''});
+    }
+    shows.sort(function(a,b){return new Date(a.date)-new Date(b.date);});
+    render();
+  }).catch(function(err){console.error('読み込みエラー:',err);render();});
+}
+function isPast(dateStr){var today=new Date();today.setHours(0,0,0,0);return new Date(dateStr)<today;}
+function render(){
+  var el=document.getElementById('showList');el.innerHTML='';
+  for(var i=0;i<shows.length;i++){
+    var s=shows[i];var d=document.createElement('div');d.className='show-item';
+    d.innerHTML='<div class="show-date"><div class="show-day">'+s.day+'</div><div class="show-mon">'+s.month+'</div></div><div class="v-rule"></div><div class="show-info"><div class="show-t-row"><span class="show-t">'+(s.title||s.venue)+'</span>'+(isPast(s.date)?'<span class="show-tag-pill past-pill"><span class="ja-i">終了</span><span class="en-i">Over</span></span>':'')+'</div><div class="show-v">'+(s.title?s.venue:'')+'</div></div><div class="show-r"><div class="show-time">'+s.time+'</div>'+(s.tag?'<div class="show-tag-pill">'+s.tag+'</div>':'')+'</div>';
+    if(s.image||s.detail){d.style.cursor='pointer';(function(img,ttl,ven,det){d.addEventListener('click',function(){openModal(img,ttl,ven,det);});})(s.image,s.title||s.venue,s.venue,s.detail);}
+    el.appendChild(d);
+  }
+}
+function openModal(imgUrl,title,venue,detail){
+  var hasImg=!!imgUrl;
+  document.getElementById('modal-img').src=imgUrl||'';
+  document.getElementById('modal-img').style.display=hasImg?'block':'none';
+  document.getElementById('modal-caption').textContent=title+(venue&&title!==venue?'  —  '+venue:'');
+  document.getElementById('modal-detail').textContent=detail||'';
+  document.getElementById('modal-detail').style.display=detail?'block':'none';
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+function parseCsvLine(line) {
+  var result = [];
+  var current = '';
+  var inQuotes = false;
+  for (var i = 0; i < line.length; i++) {
+    var ch = line[i];
+    if (ch === '"') {
+      if (inQuotes && line[i+1] === '"') {
+        current += '"'; i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (ch === ',' && !inQuotes) {
+      result.push(current.trim());
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  result.push(current.trim());
+  return result;
+}
+loadSheetData();
+</script>
+</body>
+</html>
