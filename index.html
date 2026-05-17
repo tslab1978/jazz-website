@@ -45,11 +45,15 @@ section{padding:7rem 3.5rem;border-top:0.5px solid var(--line);}
 .sec-title{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:clamp(2rem,4.5vw,3.8rem);font-weight:200;line-height:1;letter-spacing:-0.03em;color:var(--white);}
 .sec-title em{font-style:italic;font-weight:100;color:rgba(240,240,240,0.4);}
 .show-list{margin-top:2.5rem;}
-.show-item{display:grid;grid-template-columns:4rem 1px 1fr auto;gap:0 2.2rem;align-items:center;padding:1.5rem 0;border-bottom:0.5px solid var(--line);transition:background 0.2s;cursor:default;}
+.show-item{display:grid;grid-template-columns:4px 80px 1fr;column-gap:1.5rem;align-items:center;padding:1.5rem 0;border-bottom:0.5px solid var(--line);transition:background 0.2s;cursor:default;}
 .show-item:hover{background:rgba(255,255,255,0.02);}
-.show-date{text-align:center;}
+.show-item.past{opacity:0.35;}
+.status-bar{align-self:stretch;border-radius:2px;}
+.show-item.past .status-bar{background:rgba(255,255,255,0.12);}
+.show-item.upcoming .status-bar{background:#378ADD;}
+.show-date{display:flex;align-items:baseline;gap:5px;}
 .show-day{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:1.7rem;font-weight:200;color:var(--accent);line-height:1;}
-.show-mon{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted2);margin-top:2px;}
+.show-mon{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted2);}
 .v-rule{width:0.5px;height:2.2rem;background:var(--line2);justify-self:center;}
 .show-t{font-family:'Helvetica Neue','Helvetica','ヒラギノ角ゴ ProN','Hiragino Kaku Gothic ProN',sans-serif;font-size:0.95rem;font-weight:300;color:var(--white);margin-bottom:3px;}
 .show-t-row{display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;}
@@ -85,7 +89,10 @@ footer{padding:2.5rem 3.5rem;border-top:0.5px solid var(--line);display:flex;jus
 #modal-inner{position:relative;display:flex;flex-direction:column;align-items:center;width:min(420px,90vw);max-height:90vh;overflow-y:auto;cursor:default;padding:0 0.5rem;}
 #modal-inner img{width:100%;max-height:60vh;object-fit:contain;display:block;}
 #modal-caption{font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.95rem;font-weight:300;letter-spacing:0.1em;color:var(--white);text-align:center;margin-top:0.8rem;width:100%;}
-#modal-detail{font-family:'Helvetica Neue','Helvetica','ヒラギノ角ゴ ProN','Hiragino Kaku Gothic ProN',sans-serif;font-size:0.82rem;font-weight:300;color:var(--text);line-height:1.9;margin-top:0.8rem;width:100%;text-align:left;white-space:pre-wrap;word-break:break-word;}
+#modal-musicians{display:flex;flex-wrap:wrap;gap:6px 20px;justify-content:center;font-size:0.82rem;margin-top:0.8rem;width:100%;}
+#modal-musicians a{color:#378ADD;text-decoration:none;transition:opacity 0.2s;}
+#modal-musicians a:hover{opacity:0.7;}
+#modal-musicians span{color:var(--muted2);}
 #modal-close{position:absolute;top:-2rem;right:0;font-family:'Helvetica Neue','Helvetica',sans-serif;font-size:0.6rem;letter-spacing:0.2em;color:var(--muted);cursor:pointer;background:transparent;border:none;transition:color 0.2s;}
 #modal-close:hover{color:var(--white);}
 @keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
@@ -191,7 +198,7 @@ footer{padding:2.5rem 3.5rem;border-top:0.5px solid var(--line);display:flex;jus
     <button id="modal-close" onclick="closeModal()">CLOSE ×</button>
     <img id="modal-img" src="" alt=""/>
     <div id="modal-caption"></div>
-    <div id="modal-detail" style="display:none;"></div>
+    <div id="modal-musicians" style="display:none;"></div>
   </div>
 </div>
 <script>
@@ -222,29 +229,39 @@ function loadSheetData(){
       var d=new Date(dateStr);if(isNaN(d.getTime()))continue;
       var month=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'][d.getMonth()];
       var day=('0'+d.getDate()).slice(-2);
-      shows.push({date:dateStr,day:day,month:month,venue:cols[1]||'',title:cols[2]||'',time:'',tag:'',image:flierMap[d.toDateString()]||'',detail:cols[13]||''});
+      var musicians=[];for(var m=0;m<6;m++){var mn=cols[14+m*2]||'';var mu=cols[15+m*2]||'';if(mn.trim())musicians.push({name:mn.trim(),url:mu.trim()});}
+      shows.push({date:dateStr,day:day,month:month,venue:cols[1]||'',title:cols[2]||'',time:'',tag:'',image:flierMap[d.toDateString()]||'',musicians:musicians});
     }
     shows.sort(function(a,b){return new Date(a.date)-new Date(b.date);});
+    var today=new Date();today.setHours(0,0,0,0);
+    var oneYearLater=new Date(today);oneYearLater.setFullYear(oneYearLater.getFullYear()+1);
+    var thirtyDaysAgo=new Date(today);thirtyDaysAgo.setDate(thirtyDaysAgo.getDate()-30);
+    shows=shows.filter(function(s){var sd=new Date(s.date);return sd>=thirtyDaysAgo&&sd<=oneYearLater;});
     render();
   }).catch(function(err){console.error('読み込みエラー:',err);render();});
 }
 function isPast(dateStr){var today=new Date();today.setHours(0,0,0,0);return new Date(dateStr)<today;}
 function render(){
   var el=document.getElementById('showList');el.innerHTML='';
+  var today=new Date();today.setHours(0,0,0,0);
   for(var i=0;i<shows.length;i++){
-    var s=shows[i];var d=document.createElement('div');d.className='show-item';
-    d.innerHTML='<div class="show-date"><div class="show-day">'+s.day+'</div><div class="show-mon">'+s.month+'</div></div><div class="v-rule"></div><div class="show-info"><div class="show-t-row"><span class="show-t">'+(s.title||s.venue)+'</span>'+(isPast(s.date)?'<span class="show-tag-pill past-pill"><span class="ja-i">終了</span><span class="en-i">Over</span></span>':'')+'</div><div class="show-v">'+(s.title?s.venue:'')+'</div></div><div class="show-r"><div class="show-time">'+s.time+'</div>'+(s.tag?'<div class="show-tag-pill">'+s.tag+'</div>':'')+'</div>';
-    if(s.image||s.detail){d.style.cursor='pointer';(function(img,ttl,ven,det){d.addEventListener('click',function(){openModal(img,ttl,ven,det);});})(s.image,s.title||s.venue,s.venue,s.detail);}
+    var s=shows[i];var past=new Date(s.date)<today;
+    var d=document.createElement('div');d.className='show-item '+(past?'past':'upcoming');
+    d.innerHTML='<div class="status-bar"></div><div class="show-date"><span class="show-day">'+s.day+'</span><span class="show-mon">'+s.month+'</span></div><div class="show-info"><div class="show-t">'+(s.title||s.venue)+'</div><div class="show-v">'+(s.title?s.venue:'')+'</div></div>';
+    if(s.image||s.musicians.length){d.style.cursor='pointer';(function(img,ttl,ven,muss){d.addEventListener('click',function(){openModal(img,ttl,ven,muss);});})(s.image,s.title||s.venue,s.venue,s.musicians);}
     el.appendChild(d);
   }
 }
-function openModal(imgUrl,title,venue,detail){
+function openModal(imgUrl,title,venue,musicians){
   var hasImg=!!imgUrl;
   document.getElementById('modal-img').src=imgUrl||'';
   document.getElementById('modal-img').style.display=hasImg?'block':'none';
   document.getElementById('modal-caption').textContent=title+(venue&&title!==venue?'  —  '+venue:'');
-  document.getElementById('modal-detail').textContent=detail||'';
-  document.getElementById('modal-detail').style.display=detail?'block':'none';
+  var musEl=document.getElementById('modal-musicians');musEl.innerHTML='';
+  if(musicians&&musicians.length){
+    for(var i=0;i<musicians.length;i++){var m=musicians[i];var me;if(m.url){me=document.createElement('a');me.href=m.url;me.target='_blank';me.textContent=m.name;}else{me=document.createElement('span');me.textContent=m.name;}musEl.appendChild(me);}
+    musEl.style.display='flex';
+  }else{musEl.style.display='none';}
   document.getElementById('modal').classList.add('open');
   document.body.style.overflow='hidden';
 }
